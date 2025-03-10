@@ -12,8 +12,10 @@ public struct SwiftRenderer: Renderer {
         var files: [FilePath: String] = [:]
         let context = Context(
             schemaRenderers: [
-                StructRenderer.init,
-                EnumRenderer.init
+                BoolRenderer.init,
+                EnumRenderer.init,
+                StringRenderer.init,
+                StructRenderer.init
             ]
         )
 

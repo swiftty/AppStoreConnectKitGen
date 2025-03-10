@@ -59,7 +59,7 @@ struct StructRenderer: ComponentRenderer {
                 let extensionDecl = try ExtensionDeclSyntax("""
                 \(accessLevel) extension \(raw: context.nesting.joined(separator: "."))
                 """) {
-                    for (_, (_, content)) in children {
+                    for (_, (_, content)) in children where !content.isEmpty {
                         "\(raw: content)"
                     }
                 }

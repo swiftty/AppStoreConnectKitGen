@@ -16,7 +16,8 @@ struct SchemaRenderer: ComponentRenderer {
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
         guard let renderer = context.schemaRenderer(for: schema),
-              let (type, content) = try renderer.render(key: key, context: &context) else {
+              let (type, content) = try renderer.render(key: key, context: &context),
+              !content.isEmpty else {
             return nil
         }
 
