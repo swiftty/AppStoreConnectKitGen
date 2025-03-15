@@ -19,22 +19,22 @@ struct StringRenderer: ComponentRenderer {
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
         switch coreContext.format {
         case .byte, .binary:
-            return (TypeIdentifierName(reserved: "Data"), "")
+            return (schema.identifier(reserved: "Data"), "")
 
         case .date, .dateTime:
-            return (TypeIdentifierName(reserved: "Date"), "")
+            return (schema.identifier(reserved: "Date"), "")
 
         case .other("uri"):
-            return (TypeIdentifierName(reserved: "URL"), "")
+            return (schema.identifier(reserved: "URL"), "")
 
         case .generic, .password:
-            return (TypeIdentifierName(reserved: "String"), "")
+            return (schema.identifier(reserved: "String"), "")
 
         case .other("email"):
-            return (TypeIdentifierName(reserved: "String"), "")
+            return (schema.identifier(reserved: "String"), "")
 
         case .other:
-            return (TypeIdentifierName(reserved: "String"), "")
+            return (schema.identifier(reserved: "String"), "")
         }
     }
 }

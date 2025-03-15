@@ -18,7 +18,7 @@ struct EnumRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        let typeName = TypeIdentifierName(schema.title ?? key.rawValue)
+        let typeName = schema.identifier(as: key.rawValue)
         context.nesting.append(typeName.description)
         defer { context.nesting.removeLast() }
 
@@ -27,7 +27,7 @@ struct EnumRenderer: ComponentRenderer {
         )
 
         let structDecl = try StructDeclSyntax("""
-        \(accessLevel) struct \(typeName): RawRepresentable, Hashable, Codable, Sendable
+        \(accessLevel) struct \(define: typeName): RawRepresentable, Hashable, Codable, Sendable
         """) {
             for value in allowedValues {
                 try VariableDeclSyntax("""

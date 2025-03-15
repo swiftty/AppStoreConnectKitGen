@@ -13,13 +13,13 @@ struct ObjectRenderer: ComponentRenderer {
         self.objectContext = objectContext
     }
 
+    // swiftlint:disable:next function_body_length
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        var children: [IdentifierName: RenderResult] = [:]
-        let typeName = TypeIdentifierName(schema.title ?? key.rawValue)
+        let typeName = schema.identifier(as: key.rawValue)
         context.nesting.append(typeName.description)
         defer { context.nesting.removeLast() }
 
-        children = Dictionary(
+        let children: [IdentifierName: RenderResult] = Dictionary(
             uniqueKeysWithValues: try objectContext.properties
                 .compactMap { key, schema in
                     guard let renderer = context.schemaRenderer(for: schema),
@@ -31,21 +31,22 @@ struct ObjectRenderer: ComponentRenderer {
         )
 
         let structDecl = try StructDeclSyntax("""
-        \(accessLevel) struct \(typeName): Hashable
+        \(accessLevel) struct \(define: typeName): Hashable
         """) {
             for (key, (type, _)) in children {
                 try VariableDeclSyntax("""
-                \(accessLevel) var \(key): \(type)
+                \(accessLevel) var \(key): \(type: type)
                 """)
             }
 
             let arguments = FunctionParameterListSyntax {
                 for (key, (type, _)) in children {
-                    FunctionParameterSyntax("\(key): \(type)")
+                    FunctionParameterSyntax("\(key): \(type: type)\(raw: type.optional ? " = nil" : "")")
+                        .with(\.leadingTrivia, [.newlines(1)])
                 }
             }
             try InitializerDeclSyntax("""
-            \(accessLevel) init(\(arguments))
+            \(accessLevel) init(\(arguments)\n)
             """) {
                 CodeBlockItemListSyntax {
                     for (key, _) in children {

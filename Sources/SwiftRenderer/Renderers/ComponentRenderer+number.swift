@@ -17,6 +17,6 @@ struct NumberRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        return (TypeIdentifierName(reserved: "Float"), "")
+        return (schema.identifier(reserved: "Float"), "")
     }
 }

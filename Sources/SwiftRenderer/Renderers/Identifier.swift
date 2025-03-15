@@ -41,30 +41,36 @@ struct IdentifierName: Hashable {
 struct TypeIdentifierName: Hashable {
     var rawValue: String
     var description: String
+    var optional: Bool = false
 
-    init(reserved: String) {
+    init(reserved: String, optional: Bool = false) {
         self.rawValue = reserved
         self.description = reserved
+        self.optional = optional
     }
 
-    init(_ rawValue: String) {
+    init(_ rawValue: String, optional: Bool = false) {
         self.rawValue = rawValue
         self.description = {
             let result = resolveSwiftAltTypeKeyword(rawValue.prefix(1).uppercased() + rawValue.dropFirst())
 
             return swiftKeywords.contains(result) ? "`\(result)`" : result
         }()
+        self.optional = optional
     }
 }
-
 
 extension SyntaxStringInterpolation {
     mutating func appendInterpolation(_ value: IdentifierName!) {
         appendInterpolation(raw: value.description)
     }
 
-    mutating func appendInterpolation(_ value: TypeIdentifierName!) {
+    mutating func appendInterpolation(define value: TypeIdentifierName!) {
         appendInterpolation(raw: value.description)
+    }
+
+    mutating func appendInterpolation(type value: TypeIdentifierName!) {
+        appendInterpolation(raw: "\(value.description)\(value.optional ? "?" : "")")
     }
 }
 
