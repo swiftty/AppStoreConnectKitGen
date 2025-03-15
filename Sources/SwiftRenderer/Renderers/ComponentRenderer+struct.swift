@@ -57,18 +57,20 @@ struct StructRenderer: ComponentRenderer {
             }
             .with(\.leadingTrivia, [.newlines(2)])
 
-            try EnumDeclSyntax("""
-            private enum CodingKeys: String, CodingKey
-            """) {
-                for (key, _) in children {
-                    if key.isRenamed {
-                        try EnumCaseDeclSyntax("case \(key) = \"\(raw: key.rawValue)\"")
-                    } else {
-                        try EnumCaseDeclSyntax("case \(key)")
+            if !children.isEmpty {
+                try EnumDeclSyntax("""
+                private enum CodingKeys: String, CodingKey
+                """) {
+                    for (key, _) in children {
+                        if key.isRenamed {
+                            try EnumCaseDeclSyntax("case \(key) = \"\(raw: key.rawValue)\"")
+                        } else {
+                            try EnumCaseDeclSyntax("case \(key)")
+                        }
                     }
                 }
+                .with(\.leadingTrivia, [.newlines(2)])
             }
-            .with(\.leadingTrivia, [.newlines(2)])
 
             for (_, (_, content)) in children where !content.isEmpty {
                 "\(raw: content)"

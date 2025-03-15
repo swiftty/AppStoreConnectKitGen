@@ -33,6 +33,7 @@ struct SchemaRenderer: ComponentRenderer {
             import Foundation
             #endif
 
+
             """
 
             CodeBlockItemListSyntax {

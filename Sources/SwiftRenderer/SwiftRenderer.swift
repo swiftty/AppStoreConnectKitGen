@@ -13,6 +13,8 @@ public struct SwiftRenderer: Renderer {
         let context = Context(
             schemaRenderers: [
                 BoolRenderer.init,
+                IntegerRenderer.init,
+                NumberRenderer.init,
                 EnumRenderer.init,
                 StringRenderer.init,
                 StructRenderer.init,
