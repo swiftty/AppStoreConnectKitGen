@@ -19,12 +19,15 @@ struct StringRenderer: ComponentRenderer {
     func render(key: String, context: inout Context) throws -> RenderResult? {
         switch coreContext.format {
         case .byte, .binary:
+            context.requiresPublicImport = true
             return (schema.identifier(reserved: "Data"), "")
 
         case .date, .dateTime:
+            context.requiresPublicImport = true
             return (schema.identifier(reserved: "Date"), "")
 
         case .other("uri"):
+            context.requiresPublicImport = true
             return (schema.identifier(reserved: "URL"), "")
 
         case .generic, .password:

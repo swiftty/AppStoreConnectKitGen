@@ -5,6 +5,7 @@ import System
 struct Context {
     var extensions: [String]
     var nesting: [TypeIdentifierName]
+    var requiresPublicImport: Bool = false
 
     private var schemaRenderers: [(JSONSchema) -> (any ComponentRenderer)?]
 

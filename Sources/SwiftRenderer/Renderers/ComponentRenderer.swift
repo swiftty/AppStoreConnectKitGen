@@ -27,14 +27,24 @@ struct SchemaRenderer: ComponentRenderer {
 
             // swiftlint:disable:next blanket_disable_command
             // swiftlint:disable all
-            #if compiler(>=6)
-            public import Foundation
-            #else
-            import Foundation
-            #endif
-
-
             """
+            if context.requiresPublicImport {
+                """
+                #if compiler(>=6)
+                public import Foundation
+                #else
+                import Foundation
+                #endif
+
+
+                """
+            } else {
+                """
+                import Foundation
+
+
+                """
+            }
 
             CodeBlockItemListSyntax {
                 "\(raw: content)"
