@@ -38,32 +38,40 @@ struct StructRenderer: ComponentRenderer {
                 \(accessLevel) var \(key): \(raw: type)
                 """)
             }
-        }
 
-        if !children.isEmpty {
-            do {
-                let extensionDecl = try ExtensionDeclSyntax("""
-                \(accessLevel) extension \(raw: context.nesting.joined(separator: ".")): Codable
-                """) {
-                    try EnumDeclSyntax("""
-                    private enum CodingKeys: String, CodingKey
-                    """) {
-                        for (key, _) in children {
-                            try EnumCaseDeclSyntax("case \(key) = \"\(raw: key.rawValue)\"")
-                        }
-                    }
+            let arguments = FunctionParameterListSyntax {
+                for (key, (type, _)) in children {
+                    FunctionParameterSyntax("\(key): \(raw: type)")
                 }
-                context.extensions.append(extensionDecl.formatted().description)
             }
-            do {
-                let extensionDecl = try ExtensionDeclSyntax("""
-                \(accessLevel) extension \(raw: context.nesting.joined(separator: "."))
-                """) {
-                    for (_, (_, content)) in children where !content.isEmpty {
-                        "\(raw: content)"
+            try InitializerDeclSyntax("""
+            \(accessLevel) init(\(arguments))
+            """) {
+                CodeBlockItemListSyntax {
+                    for (key, _) in children {
+                        """
+                        self.\(key) = \(key)
+                        """
                     }
                 }
-                context.extensions.append(extensionDecl.formatted().description)
+            }
+            .with(\.leadingTrivia, [.newlines(2)])
+
+            try EnumDeclSyntax("""
+            private enum CodingKeys: String, CodingKey
+            """) {
+                for (key, _) in children {
+                    if key.isRenamed {
+                        try EnumCaseDeclSyntax("case \(key) = \"\(raw: key.rawValue)\"")
+                    } else {
+                        try EnumCaseDeclSyntax("case \(key)")
+                    }
+                }
+            }
+            .with(\.leadingTrivia, [.newlines(2)])
+
+            for (_, (_, content)) in children where !content.isEmpty {
+                "\(raw: content)"
             }
         }
 

@@ -3,6 +3,7 @@ import SwiftSyntaxBuilder
 
 enum Types {
     struct IdentifierName: Hashable {
+        var isRenamed: Bool { rawValue != description }
         var rawValue: String
         var description: String
 
@@ -25,9 +26,9 @@ enum Types {
                        .joined()
                 } else {
                     if words[0].first?.isUppercase ?? false {
-                        words[0].lowercased()
+                        resolveReservedWord(words[0].lowercased())
                     } else {
-                        String(words[0])
+                        resolveReservedWord(String(words[0]))
                     }
                 }
 
@@ -89,7 +90,8 @@ private let reservedWords: [String: String] = [
     "macos": "macOS",
     "watchos": "watchOS",
     "tvos": "tvOS",
-    "visionos": "visionOS"
+    "visionos": "visionOS",
+    "self": "current"
 ]
 
 private func resolveReservedWord(_ word: String) -> String {

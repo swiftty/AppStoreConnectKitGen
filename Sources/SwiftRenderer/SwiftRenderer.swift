@@ -15,7 +15,9 @@ public struct SwiftRenderer: Renderer {
                 BoolRenderer.init,
                 EnumRenderer.init,
                 StringRenderer.init,
-                StructRenderer.init
+                StructRenderer.init,
+                ArrayRenderer.init,
+                RefRenderer.init
             ]
         )
 
