@@ -14,7 +14,7 @@ struct RefRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        guard let name = ref.name.map(TypeIdentifierName.init) else { return nil }
-        return (name.description, "")
+        guard let name = ref.name else { return nil }
+        return (TypeIdentifierName(name), "")
     }
 }

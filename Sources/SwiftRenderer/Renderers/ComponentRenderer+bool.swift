@@ -13,6 +13,6 @@ struct BoolRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        return ("Bool", "")
+        return (TypeIdentifierName(reserved: "Bool"), "")
     }
 }

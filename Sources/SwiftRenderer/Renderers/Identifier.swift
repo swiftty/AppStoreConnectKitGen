@@ -42,6 +42,11 @@ struct TypeIdentifierName: Hashable {
     var rawValue: String
     var description: String
 
+    init(reserved: String) {
+        self.rawValue = reserved
+        self.description = reserved
+    }
+
     init(_ rawValue: String) {
         self.rawValue = rawValue
         self.description = {

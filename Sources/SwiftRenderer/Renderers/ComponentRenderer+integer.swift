@@ -17,6 +17,6 @@ struct IntegerRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        return ("Int", "")
+        return (TypeIdentifierName(reserved: "Int"), "")
     }
 }

@@ -35,13 +35,13 @@ struct ObjectRenderer: ComponentRenderer {
         """) {
             for (key, (type, _)) in children {
                 try VariableDeclSyntax("""
-                \(accessLevel) var \(key): \(raw: type)
+                \(accessLevel) var \(key): \(type)
                 """)
             }
 
             let arguments = FunctionParameterListSyntax {
                 for (key, (type, _)) in children {
-                    FunctionParameterSyntax("\(key): \(raw: type)")
+                    FunctionParameterSyntax("\(key): \(type)")
                 }
             }
             try InitializerDeclSyntax("""
@@ -77,7 +77,7 @@ struct ObjectRenderer: ComponentRenderer {
             }
         }
 
-        return (typeName.description, structDecl.formatted().description)
+        return (typeName, structDecl.formatted().description)
     }
 
     private func renderProperty(

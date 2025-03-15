@@ -4,7 +4,7 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 
 protocol ComponentRenderer {
-    typealias RenderResult = (type: String, content: String)
+    typealias RenderResult = (type: TypeIdentifierName, content: String)
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult?
 }

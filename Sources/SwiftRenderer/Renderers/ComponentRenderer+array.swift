@@ -24,6 +24,6 @@ struct ArrayRenderer: ComponentRenderer {
             return nil
         }
 
-        return ("[\(itemType)]", itemContent)
+        return (TypeIdentifierName(reserved: "[\(itemType.description)]"), itemContent)
     }
 }

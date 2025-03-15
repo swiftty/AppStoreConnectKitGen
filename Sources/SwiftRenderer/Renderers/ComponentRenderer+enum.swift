@@ -47,6 +47,6 @@ struct EnumRenderer: ComponentRenderer {
             }
         }
 
-        return (typeName.description, structDecl.formatted().description)
+        return (typeName, structDecl.formatted().description)
     }
 }
