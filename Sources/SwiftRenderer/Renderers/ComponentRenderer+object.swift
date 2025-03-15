@@ -14,8 +14,8 @@ struct ObjectRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        var children: [Types.IdentifierName: RenderResult] = [:]
-        let typeName = Types.TypeIdentifierName(schema.title ?? key.rawValue)
+        var children: [IdentifierName: RenderResult] = [:]
+        let typeName = TypeIdentifierName(schema.title ?? key.rawValue)
         context.nesting.append(typeName.description)
         defer { context.nesting.removeLast() }
 
@@ -26,7 +26,7 @@ struct ObjectRenderer: ComponentRenderer {
                           let (type, content) = try renderer.render(key: .init(stringLiteral: key), context: &context) else {
                         return nil
                     }
-                    return (Types.IdentifierName(key), (type, content))
+                    return (IdentifierName(key), (type, content))
                 }
         )
 

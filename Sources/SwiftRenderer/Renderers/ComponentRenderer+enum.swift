@@ -18,12 +18,12 @@ struct EnumRenderer: ComponentRenderer {
     }
 
     func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        let typeName = Types.TypeIdentifierName(schema.title ?? key.rawValue)
+        let typeName = TypeIdentifierName(schema.title ?? key.rawValue)
         context.nesting.append(typeName.description)
         defer { context.nesting.removeLast() }
 
         let identifiers = Dictionary(
-            uniqueKeysWithValues: allowedValues.map { ($0, Types.IdentifierName($0)) }
+            uniqueKeysWithValues: allowedValues.map { ($0, IdentifierName($0)) }
         )
 
         let structDecl = try StructDeclSyntax("""
