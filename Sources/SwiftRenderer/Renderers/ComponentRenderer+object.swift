@@ -2,7 +2,7 @@ import OpenAPIKit30
 import SwiftSyntax
 import SwiftSyntaxBuilder
 
-struct StructRenderer: ComponentRenderer {
+struct ObjectRenderer: ComponentRenderer {
     var accessLevel: AccessLevel = .public
     var schema: JSONSchema
     var objectContext: JSONSchema.ObjectContext

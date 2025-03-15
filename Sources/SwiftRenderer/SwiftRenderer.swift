@@ -17,7 +17,7 @@ public struct SwiftRenderer: Renderer {
                 NumberRenderer.init,
                 EnumRenderer.init,
                 StringRenderer.init,
-                StructRenderer.init,
+                ObjectRenderer.init,
                 ArrayRenderer.init,
                 RefRenderer.init
             ]
