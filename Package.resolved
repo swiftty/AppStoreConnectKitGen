@@ -1,5 +1,5 @@
 {
-  "originHash" : "452c88e8c34f4e515ab62d8c85ad73540ca6362a529c493d3c1b585f7c6eb41d",
+  "originHash" : "cf53940d94626c2b04757c25dc677ed745d9450e9caeb3b723c41a98431a4337",
   "pins" : [
     {
       "identity" : "openapikit",
@@ -33,7 +33,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftty/SwiftLintBinary.git",
       "state" : {
-        "revision" : "af115621584dd5940abf3d5ebf482deb6e4fdf93",
+        "revision" : "18f8bc5fc3cddd3f43eff3bb846047f6838d6881",
         "version" : "0.58.2"
       }
     },

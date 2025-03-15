@@ -1,0 +1,37 @@
+name: test
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - main
+
+jobs:
+  check-generated-code:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            .build
+          key: ${{ runner.os }}-build-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+      - run: |
+          curl "https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip" -o app-store-connect-openapi-specification.zip
+          unzip app-store-connect-openapi-specification.zip
+          # places openapi.oas.json
+      - run: |
+          mkdir GeneratedProject
+          cd GeneratedProject
+          swift package init
+          cd ..
+      - run: |
+          swift build -c release
+          ./.build/release/apigen -h
+          ./.build/release/apigen openapi.oas.json -o GeneratedProject/Sources/GeneratedProject/generated
+      - run: |
+          cd GeneratedProject
+          swift build
