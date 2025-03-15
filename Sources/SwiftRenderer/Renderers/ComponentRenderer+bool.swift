@@ -12,7 +12,7 @@ struct BoolRenderer: ComponentRenderer {
         self.schema = schema
     }
 
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
+    func render(key: String, context: inout Context) throws -> RenderResult? {
         return (schema.identifier(reserved: "Bool"), "")
     }
 }

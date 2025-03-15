@@ -16,7 +16,7 @@ struct StringRenderer: ComponentRenderer {
         self.stringContext = stringContext
     }
 
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
+    func render(key: String, context: inout Context) throws -> RenderResult? {
         switch coreContext.format {
         case .byte, .binary:
             return (schema.identifier(reserved: "Data"), "")

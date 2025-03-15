@@ -26,7 +26,7 @@ public struct SwiftRenderer: Renderer {
         let schemaPath = FilePath("schemas")
         for (key, schema) in document.components.schemas {
             var context = context
-            if let (type, content) = try SchemaRenderer(schema: schema).render(key: key, context: &context) {
+            if let (type, content) = try SchemaRenderer(schema: schema).render(key: key.rawValue, context: &context) {
                 let file = FilePath("\(type.description).swift")
                 files[schemaPath.appending(file.components)] = content
             }

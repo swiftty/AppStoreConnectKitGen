@@ -17,9 +17,9 @@ struct EnumRenderer: ComponentRenderer {
         self.allowedValues = allowedValues
     }
 
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        let typeName = schema.identifier(as: key.rawValue)
-        context.nesting.append(typeName.description)
+    func render(key: String, context: inout Context) throws -> RenderResult? {
+        let typeName = schema.identifier(as: key)
+        context.nesting.append(typeName)
         defer { context.nesting.removeLast() }
 
         let identifiers = Dictionary(

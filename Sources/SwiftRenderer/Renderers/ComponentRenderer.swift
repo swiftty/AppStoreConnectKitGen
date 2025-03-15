@@ -6,7 +6,7 @@ import SwiftSyntaxBuilder
 protocol ComponentRenderer {
     typealias RenderResult = (type: TypeIdentifierName, content: String)
 
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult?
+    func render(key: String, context: inout Context) throws -> RenderResult?
 }
 
 // MARK: -
@@ -14,7 +14,7 @@ protocol ComponentRenderer {
 struct SchemaRenderer: ComponentRenderer {
     var schema: JSONSchema
 
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
+    func render(key: String, context: inout Context) throws -> RenderResult? {
         guard let renderer = context.schemaRenderer(for: schema),
               let (type, content) = try renderer.render(key: key, context: &context),
               !content.isEmpty else {

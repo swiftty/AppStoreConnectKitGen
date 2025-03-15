@@ -4,7 +4,7 @@ import System
 
 struct Context {
     var extensions: [String]
-    var nesting: [String]
+    var nesting: [TypeIdentifierName]
 
     private var schemaRenderers: [(JSONSchema) -> (any ComponentRenderer)?]
 

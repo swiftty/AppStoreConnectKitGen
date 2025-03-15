@@ -14,19 +14,19 @@ struct ObjectRenderer: ComponentRenderer {
     }
 
     // swiftlint:disable:next function_body_length
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
-        let typeName = schema.identifier(as: key.rawValue)
-        context.nesting.append(typeName.description)
+    func render(key: String, context: inout Context) throws -> RenderResult? {
+        let typeName = schema.identifier(as: key)
+        context.nesting.append(typeName)
         defer { context.nesting.removeLast() }
 
         let children: [IdentifierName: RenderResult] = Dictionary(
             uniqueKeysWithValues: try objectContext.properties
                 .compactMap { key, schema in
                     guard let renderer = context.schemaRenderer(for: schema),
-                          let (type, content) = try renderer.render(key: .init(stringLiteral: key), context: &context) else {
+                          let result = try renderer.render(key: key, context: &context) else {
                         return nil
                     }
-                    return (IdentifierName(key), (type, content))
+                    return (IdentifierName(key), result)
                 }
         )
 
@@ -86,7 +86,7 @@ struct ObjectRenderer: ComponentRenderer {
         context: inout Context, contents: inout [String]
     ) throws -> String? {
         guard let renderer = context.schemaRenderer(for: schema),
-              let (type, content) = try renderer.render(key: .init(stringLiteral: key), context: &context) else {
+              let (type, content) = try renderer.render(key: key, context: &context) else {
             return nil
         }
 

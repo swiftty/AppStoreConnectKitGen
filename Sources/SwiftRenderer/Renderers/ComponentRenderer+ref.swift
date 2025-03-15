@@ -13,7 +13,7 @@ struct RefRenderer: ComponentRenderer {
         self.ref = ref
     }
 
-    func render(key: OpenAPI.ComponentKey, context: inout Context) throws -> RenderResult? {
+    func render(key: String, context: inout Context) throws -> RenderResult? {
         guard let name = ref.name else { return nil }
         return (schema.identifier(as: name), "")
     }
