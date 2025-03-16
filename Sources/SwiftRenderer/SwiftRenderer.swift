@@ -19,6 +19,7 @@ public struct SwiftRenderer: Renderer {
                 StringRenderer.init,
                 ObjectRenderer.init,
                 ArrayRenderer.init,
+                OneOfRenderer.init,
                 RefRenderer.init
             ]
         )
