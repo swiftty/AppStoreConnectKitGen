@@ -22,7 +22,7 @@ struct OneOfRenderer: ComponentRenderer {
                       let result = try renderer.render(key: key, context: &context) else {
                     return nil
                 }
-                return (IdentifierName(result.type.description), result)
+                return (IdentifierName(result.type), result)
             }
 
         let enumDecl = try EnumDeclSyntax("\(accessLevel) enum \(define: typeName): Hashable, Codable") {
@@ -31,6 +31,41 @@ struct OneOfRenderer: ComponentRenderer {
                 case \(identifier)(\(type: type))
                 """)
             }
+
+            try InitializerDeclSyntax("public init(from decoder: any Decoder) throws") {
+                """
+                self = try {
+                    var lastError: Error!
+                """
+
+                for (identifier, (type, _)) in children {
+                    """
+                        do {
+                            return .\(identifier)(try \(define: type)(from: decoder))
+                        } catch {
+                            lastError = error
+                        }
+                    """
+                }
+
+                """
+                    throw lastError
+                }()
+                """
+            }
+            .with(\.leadingTrivia, .newlines(2))
+
+            try FunctionDeclSyntax("\(accessLevel) func encode(to encoder: Encoder) throws") {
+                try SwitchExprSyntax("switch self") {
+                    for (identifier, _) in children {
+                        """
+                        case .\(identifier)(let value):
+                            try value.encode(to: encoder)
+                        """
+                    }
+                }
+            }
+            .with(\.leadingTrivia, .newlines(2))
 
             MemberBlockItemListSyntax {
                 for (_, (_, content)) in children where !content.isEmpty {
