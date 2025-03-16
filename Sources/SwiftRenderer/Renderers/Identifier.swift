@@ -38,6 +38,14 @@ struct IdentifierName: Hashable {
     }
 }
 
+extension IdentifierName {
+    init(_ type: TypeIdentifierName) {
+        let name = type.description.prefix(1).lowercased() + type.description.dropFirst()
+        rawValue = name
+        description = name
+    }
+}
+
 struct TypeIdentifierName: Hashable {
     var rawValue: String
     var description: String
@@ -84,7 +92,9 @@ private let swiftKeywords: Set<String> = [
 ]
 
 private let swiftAltTypeKeywords: [String: String] = [
-    "Type": "ObjectType"
+    "Type": "DataType",
+    "JsonPointer": "ErrorSourcePointer",
+    "Parameter": "ErrorSourceParameter"
 ]
 
 private func resolveSwiftAltTypeKeyword(_ word: String) -> String {

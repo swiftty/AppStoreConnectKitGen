@@ -31,7 +31,7 @@ struct ObjectRenderer: ComponentRenderer {
         )
 
         let structDecl = try StructDeclSyntax("""
-        \(accessLevel) struct \(define: typeName): Hashable
+        \(accessLevel) struct \(define: typeName): Hashable, Codable
         """) {
             for (key, (type, _)) in children {
                 try VariableDeclSyntax("""
@@ -73,9 +73,12 @@ struct ObjectRenderer: ComponentRenderer {
                 .with(\.leadingTrivia, [.newlines(2)])
             }
 
-            for (_, (_, content)) in children where !content.isEmpty {
-                "\(raw: content)"
+            MemberBlockItemListSyntax {
+                for (_, (_, content)) in children where !content.isEmpty {
+                    "\(raw: content)"
+                }
             }
+            .with(\.leadingTrivia, [.newlines(2)])
         }
 
         return (typeName, structDecl.formatted().description)

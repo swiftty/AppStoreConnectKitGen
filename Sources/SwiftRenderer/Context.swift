@@ -21,6 +21,7 @@ struct Context {
                 return renderer
             }
         }
+        assertionFailure("renderer not found for \(schema)")
         return nil
     }
 }
