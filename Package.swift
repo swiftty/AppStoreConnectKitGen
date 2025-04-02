@@ -19,7 +19,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/mattpolzin/OpenAPIKit", from: "3.4.2"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
-        .package(url: "https://github.com/swiftlang/swift-syntax", from: "601.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax", from: "601.0.1"),
 
         // devDependencies
         .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.58.2")
