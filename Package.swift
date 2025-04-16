@@ -22,7 +22,7 @@ let package = Package(
         .package(url: "https://github.com/swiftlang/swift-syntax", from: "601.0.1"),
 
         // devDependencies
-        .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.59.0")
+        .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.59.1")
     ],
     targets: [
         .executableTarget(
