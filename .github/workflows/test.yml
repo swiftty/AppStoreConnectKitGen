@@ -33,5 +33,6 @@ jobs:
           ./.build/release/apigen -h
           ./.build/release/apigen openapi.oas.json -o GeneratedProject/Sources/GeneratedProject/generated
       - run: |
+          cp Template/* GeneratedProject/Sources/GeneratedProject
           cd GeneratedProject
           swift build
