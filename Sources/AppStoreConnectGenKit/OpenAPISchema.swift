@@ -66,7 +66,11 @@ extension OpenAPISchema {
                 self = .integer
 
             case .string(let core, _):
-                self = .string(format: core.formatString.flatMap(StringFormat.init(rawValue:)))
+                if let allowedValues = core.allowedValues?.compactMap({ $0.value as? String }), !allowedValues.isEmpty {
+                    self = .enum(Set(allowedValues))
+                } else {
+                    self = .string(format: core.formatString.flatMap(StringFormat.init(rawValue:)))
+                }
 
             case .object(_, let objectContext):
                 if let schema = objectContext.additionalProperties?.schemaValue {
