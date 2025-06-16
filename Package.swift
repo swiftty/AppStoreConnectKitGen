@@ -14,7 +14,7 @@ let package = Package(
             targets: ["appstoreconnectgen"])
     ],
     dependencies: [
-        .package(url: "https://github.com/mattpolzin/OpenAPIKit", from: "3.4.2"),
+        .package(url: "https://github.com/mattpolzin/OpenAPIKit", from: "3.5.2"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.1"),
 
         // devDependencies
