@@ -1,1 +1,16 @@
 line_length: 140
+
+included:
+  - Package.swift
+  - Sources
+  - Tests
+
+identifier_name:
+  excluded:
+    - c
+    - p
+    - in
+
+nesting:
+  type_level:
+    warning: 3

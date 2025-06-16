@@ -6,52 +6,41 @@ import PackageDescription
 let package = Package(
     name: "AppStoreConnectKitGen",
     platforms: [
-        .macOS(.v15),
+        .macOS(.v15)
     ],
     products: [
         .executable(
-            name: "apigen",
-            targets: ["apigen"]),
-        .library(
-            name: "AppStoreConnectKitGen",
-            targets: ["AppStoreConnectKitGen"]),
+            name: "appstoreconnectgen",
+            targets: ["appstoreconnectgen"])
     ],
     dependencies: [
-        .package(url: "https://github.com/mattpolzin/OpenAPIKit", from: "3.4.2"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
-        .package(url: "https://github.com/swiftlang/swift-syntax", from: "601.0.1"),
 
         // devDependencies
-        .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.59.0")
+        .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.59.0"),
     ],
     targets: [
         .executableTarget(
-            name: "apigen",
+            name: "appstoreconnectgen",
             dependencies: [
-                "AppStoreConnectKitGen",
-                "SwiftRenderer",
-
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                "AppStoreConnectGenKit",
+                "AppStoreConnectGenForSwift",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]),
 
         .target(
-            name: "SwiftRenderer",
+            name: "AppStoreConnectGenForSwift",
             dependencies: [
-                "AppStoreConnectKitGen",
-
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax")
+                "AppStoreConnectGenKit"
             ]),
 
-        .target(
-            name: "AppStoreConnectKitGen",
-            dependencies: [
-                .product(name: "OpenAPIKit30", package: "OpenAPIKit")
-            ]),
         .testTarget(
-            name: "AppStoreConnectKitGenTests",
-            dependencies: ["AppStoreConnectKitGen"]
-        ),
+            name: "AppStoreConnectGenForSwiftTests",
+            dependencies: [
+                "AppStoreConnectGenForSwift"
+            ]),
+
+        .target(name: "AppStoreConnectGenKit"),
     ]
 )
 
@@ -64,13 +53,5 @@ for target in package.targets {
 
         target.plugins = plugins
 
-    }
-
-    do {
-        var swiftSettings = target.swiftSettings ?? []
-        swiftSettings += [
-            .enableUpcomingFeature("InternalImportsByDefault")
-        ]
-        target.swiftSettings = swiftSettings
     }
 }

@@ -1,15 +1,6 @@
 {
-  "originHash" : "cf53940d94626c2b04757c25dc677ed745d9450e9caeb3b723c41a98431a4337",
+  "originHash" : "81cfaef8993e23e49f601f0f3fffa4ffe7ea9e12e94c0ad865d45368a87e0b42",
   "pins" : [
-    {
-      "identity" : "openapikit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mattpolzin/OpenAPIKit",
-      "state" : {
-        "revision" : "90c137c3dfde4e31204ffccc51a0a17a959efde7",
-        "version" : "3.4.1"
-      }
-    },
     {
       "identity" : "swift-argument-parser",
       "kind" : "remoteSourceControl",
@@ -20,30 +11,12 @@
       }
     },
     {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax",
-      "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
-      }
-    },
-    {
       "identity" : "swiftlintbinary",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftty/SwiftLintBinary.git",
       "state" : {
-        "revision" : "18f8bc5fc3cddd3f43eff3bb846047f6838d6881",
-        "version" : "0.58.2"
-      }
-    },
-    {
-      "identity" : "yams",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/Yams.git",
-      "state" : {
-        "revision" : "db9ff235cf800bc657c3ed0961078fc231d0f28b",
-        "version" : "5.2.0"
+        "revision" : "8b142740a38bff41072cebd89cfa0d9058d6ed19",
+        "version" : "0.59.1"
       }
     }
   ],
