@@ -20,9 +20,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-
       - run: |
+          mkdir tmp
+          cd tmp
           curl "https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip" -o app-store-connect-openapi-specification.zip
           unzip app-store-connect-openapi-specification.zip
-          # places openapi.oas.json
+          mv *.json openapi.oas.json
+          cd ..
       - run: |
           mkdir GeneratedProject
           cd GeneratedProject
@@ -30,8 +33,9 @@ jobs:
           cd ..
       - run: |
           swift build -c release
-          ./.build/release/apigen -h
-          ./.build/release/apigen openapi.oas.json -o GeneratedProject/Sources/GeneratedProject/generated
+          ./.build/release/appstoreconnectgen -h
+          ./.build/release/appstoreconnectgen --open-api-path tmp/openapi.oas.json --output GeneratedProject/Sources/GeneratedProject/generated
       - run: |
+          cp Template/* GeneratedProject/Sources/GeneratedProject
           cd GeneratedProject
           swift build

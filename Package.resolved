@@ -1,13 +1,13 @@
 {
-  "originHash" : "cf53940d94626c2b04757c25dc677ed745d9450e9caeb3b723c41a98431a4337",
+  "originHash" : "d65aedad754d4328ba8fadc90eb4160330fa3a67a9e2d767cc53100f210371bc",
   "pins" : [
     {
       "identity" : "openapikit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattpolzin/OpenAPIKit",
       "state" : {
-        "revision" : "90c137c3dfde4e31204ffccc51a0a17a959efde7",
-        "version" : "3.4.1"
+        "revision" : "a75aa4166d916f1cb4a192e928a18f7b6d3516bc",
+        "version" : "3.5.2"
       }
     },
     {
@@ -20,21 +20,12 @@
       }
     },
     {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax",
-      "state" : {
-        "revision" : "0687f71944021d616d34d922343dcef086855920",
-        "version" : "600.0.1"
-      }
-    },
-    {
       "identity" : "swiftlintbinary",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftty/SwiftLintBinary.git",
       "state" : {
-        "revision" : "18f8bc5fc3cddd3f43eff3bb846047f6838d6881",
-        "version" : "0.58.2"
+        "revision" : "8b142740a38bff41072cebd89cfa0d9058d6ed19",
+        "version" : "0.59.1"
       }
     },
     {
