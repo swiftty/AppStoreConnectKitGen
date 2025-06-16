@@ -30,8 +30,8 @@ jobs:
           cd ..
       - run: |
           swift build -c release
-          ./.build/release/apigen -h
-          ./.build/release/apigen openapi.oas.json -o GeneratedProject/Sources/GeneratedProject/generated
+          ./.build/release/appstoreconnectgen -h
+          ./.build/release/appstoreconnectgen --open-api-path openapi.oas.json --output GeneratedProject/Sources/GeneratedProject/generated
       - run: |
           cp Template/* GeneratedProject/Sources/GeneratedProject
           cd GeneratedProject
