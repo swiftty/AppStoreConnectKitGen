@@ -65,8 +65,8 @@ extension OpenAPISchema {
             case .integer:
                 self = .integer
 
-            case .string(_, let stringContext):
-                self = .string(format: stringContext.pattern.flatMap(StringFormat.init(rawValue:)))
+            case .string(let core, _):
+                self = .string(format: core.formatString.flatMap(StringFormat.init(rawValue:)))
 
             case .object(_, let objectContext):
                 if let schema = objectContext.additionalProperties?.schemaValue {
