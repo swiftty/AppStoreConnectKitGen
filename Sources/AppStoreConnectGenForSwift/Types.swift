@@ -164,7 +164,7 @@ struct StructRepr: Repr {
         return StructDecl(
             access: .public,
             name: name,
-            inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable"],
+            inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "Sendable"],
             members: declForProperties(from: result.map(\.variable)),
             initializers: [declForInitializer(from: result.map(\.variable))],
             functions: [],
@@ -219,7 +219,7 @@ struct EnumRepr: Repr {
             return EnumDecl(
                 access: .public,
                 name: name,
-                inheritances: (context.inherits[name] ?? []) + ["String", "Hashable", "Codable"],
+                inheritances: (context.inherits[name] ?? []) + ["String", "Hashable", "Codable", "Sendable"],
                 cases: caseValues.map {
                     CaseDecl(name: $0.key.rawValue, value: $0.key.rawValue == $0.raw ? nil : .string($0.raw))
                 }
@@ -228,7 +228,7 @@ struct EnumRepr: Repr {
             return EnumDecl(
                 access: .public,
                 name: name,
-                inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "RawRepresentable"],
+                inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "RawRepresentable", "Sendable"],
                 cases: caseValues.map { CaseDecl(name: $0.key.rawValue) } + [
                     CaseDecl(name: "unknown", value: .arguments([
                         ArgumentDecl(name: "", type: "String")
@@ -322,7 +322,7 @@ struct OneOfRepr: Repr {
         return EnumDecl(
             access: .public,
             name: "\(renderType(context: context))",
-            inheritances: ["Hashable", "Codable"],
+            inheritances: ["Hashable", "Codable", "Sendable"],
             cases: result.map {
                 CaseDecl(name: $0.key.rawValue, value: .arguments([ArgumentDecl(name: "", type: "\($0.type)")]))
             },
