@@ -13,7 +13,7 @@ public struct OpenAPISchema: Decodable {
         title = schema.title
         description = schema.description
         value = Property(from: schema.value)
-        deprecated = !schema.required
+        deprecated = schema.deprecated
     }
 
     public init(from decoder: any Decoder) throws {
