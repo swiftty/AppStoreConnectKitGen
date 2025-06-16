@@ -64,8 +64,12 @@ struct IdentifierName: RawRepresentable, Hashable, CustomStringConvertible {
     }
 
     init(_ key: String) {
-        self.init(rawValue: key.lowerInitialLetter())
+        self.init(rawValue: (Self.reservedNames[key] ?? key).lowerInitialLetter())
     }
+
+    static let reservedNames = [
+        "URL": "url"
+    ]
 }
 
 struct Variable {
@@ -312,8 +316,13 @@ struct OneOfRepr: Repr {
         )] = []
         var used: Set<TypeName> = []
         for prop in props {
-            guard prop.title != nil else { continue }
-            let repr = findRepr(for: prop, with: "")
+            func altName() -> String {
+                switch prop.value {
+                case .object: return "object"
+                default: return ""
+                }
+            }
+            let repr = findRepr(for: prop, with: altName())
             let type = repr.renderType(context: context)
             guard used.insert(type).inserted else { continue }
             result.append((IdentifierName(type.rawValue), type, repr.buildDecl(context: context)))
