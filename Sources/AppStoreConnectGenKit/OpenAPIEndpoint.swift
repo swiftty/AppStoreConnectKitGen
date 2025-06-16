@@ -1,4 +1,5 @@
 import Foundation
+import OpenAPIKit30
 
 public typealias OpenAPIEndpoints = [String: OpenAPIEndpoint]
 
@@ -15,49 +16,81 @@ public struct OpenAPIEndpoint: Decodable {
             || patch != nil
             || delete != nil
     }
+
+    public init(from decoder: any Decoder) throws {
+        let path = try OpenAPI.PathItem(from: decoder)
+        get = path.get.map { .init($0, buildContent: Operations.GET.init) }
+        post = path.post.map { .init($0, buildContent: Operations.POST.init) }
+        patch = path.patch.map { .init($0, buildContent: Operations.PATCH.init) }
+        delete = path.delete.map { .init($0, buildContent: Operations.DELETE.init) }
+        parameters = path.parameters.compactMap(\.parameterValue).compactMap { .init($0) }
+    }
+}
+
+public protocol RequestMethodProviding {
+    init(_ operation: OpenAPI.Operation)
 }
 
 extension OpenAPIEndpoint {
-    public struct RequestMethod<T: Decodable>: Decodable {
+    public struct RequestMethod<T> {
         public var tags: Set<String>
-        public var deprecated: Bool?
-        public var responses: [Int: Response]
+        public var deprecated: Bool
+        public var responses: [String: Response]
         public var content: T
 
         private enum CodingKeys: String, CodingKey {
             case tags, responses, deprecated
         }
 
-        public init(from decoder: Decoder) throws {
-            let contaienr = try decoder.container(keyedBy: CodingKeys.self)
-            tags = try contaienr.decode(Set<String>.self, forKey: .tags)
-            responses = try contaienr.decode([Int: Response].self, forKey: .responses)
-            deprecated = try contaienr.decodeIfPresent(Bool.self, forKey: .deprecated)
-            content = try T(from: decoder)
+        public init(_ operation: OpenAPI.Operation, buildContent: (OpenAPI.Operation) -> T) {
+            tags = Set(operation.tags ?? [])
+            responses = operation.responses.reduce(into: [:]) { result, next in
+                if let value = next.value.responseValue {
+                    result[next.key.rawValue] = .init(value)
+                }
+            }
+            deprecated = operation.deprecated
+            content = buildContent(operation)
         }
     }
 }
 
 extension OpenAPIEndpoint {
     public enum Operations {
-        public struct GET: Decodable {
-            public var parameters: [Parameter]?
+        public struct GET {
+            public var parameters: [Parameter]
+
+            init(_ operation: OpenAPI.Operation) {
+                parameters = operation.parameters
+                    .compactMap(\.parameterValue)
+                    .compactMap(OpenAPIEndpoint.Parameter.init)
+            }
         }
 
-        public struct POST: Decodable {
+        public struct POST {
             public var requestBody: RequestBody
+
+            init(_ operation: OpenAPI.Operation) {
+                requestBody = .init(operation.requestBody?.requestValue)
+            }
         }
 
-        public struct PATCH: Decodable {
+        public struct PATCH {
             public var requestBody: RequestBody
+
+            init(_ operation: OpenAPI.Operation) {
+                requestBody = .init(operation.requestBody?.requestValue)
+            }
         }
 
-        public struct DELETE: Decodable {}
+        public struct DELETE {
+            init(_ operation: OpenAPI.Operation) {}
+        }
     }
 }
 
 extension OpenAPIEndpoint {
-    public struct Parameter: Decodable {
+    public struct Parameter {
         public var name: String
         public var `in`: Location
         public var description: String?
@@ -67,26 +100,70 @@ extension OpenAPIEndpoint {
         public enum Location: String, Decodable {
             case path, query
         }
+
+        init?(_ parameter: OpenAPI.Parameter) {
+            guard let location = Location(rawValue: parameter.location.rawValue),
+                  let schema = parameter.schemaOrContent.schemaValue
+            else { return nil }
+            name = parameter.name
+            `in` = location
+            description = parameter.description
+            required = parameter.required
+            self.schema = .init(schema)
+        }
     }
 
-    public struct RequestBody: Decodable {
+    public struct RequestBody {
         public var description: String?
         public var content: [String: Content]
         public var required: Bool?
 
-        public struct Content: Decodable {
+        public struct Content {
             public var schema: OpenAPISchema
+        }
+
+        init(_ body: OpenAPI.Request?) {
+            description = body?.description
+            required = body?.required ?? false
+            content = body?.content.reduce(into: [:]) { result, next in
+                result[next.key.rawValue] = switch next.value.schema {
+                case .a(let ref):
+                    Content(schema: .init(ref))
+
+                case .b(let schema):
+                    Content(schema: .init(schema))
+
+                case nil:
+                    nil
+                }
+            } ?? [:]
         }
     }
 }
 
 extension OpenAPIEndpoint {
-    public struct Response: Decodable {
+    public struct Response {
         public var description: String?
-        public var content: [String: Content]?
+        public var content: [String: Content]
 
-        public struct Content: Decodable {
+        public struct Content {
             public var schema: OpenAPISchema
+        }
+
+        init(_ response: OpenAPI.Response) {
+            description = response.description
+            content = response.content.reduce(into: [:]) { result, next in
+                result[next.key.rawValue] = switch next.value.schema {
+                case .a(let ref):
+                    Content(schema: .init(ref))
+
+                case .b(let schema):
+                    Content(schema: .init(schema))
+
+                case nil:
+                    nil
+                }
+            }
         }
     }
 }

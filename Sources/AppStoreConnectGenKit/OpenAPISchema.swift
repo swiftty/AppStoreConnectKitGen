@@ -16,6 +16,13 @@ public struct OpenAPISchema: Decodable {
         deprecated = schema.deprecated
     }
 
+    public init(_ schema: JSONReference<JSONSchema>) {
+        title = nil
+        description = nil
+        deprecated = false
+        value = .ref(.init(rawValue: schema.name ?? ""))
+    }
+
     public init(from decoder: any Decoder) throws {
         let schema = try JSONSchema(from: decoder)
         self.init(schema)
@@ -66,7 +73,11 @@ extension OpenAPISchema {
                 self = .integer
 
             case .string(let core, _):
-                self = .string(format: core.formatString.flatMap(StringFormat.init(rawValue:)))
+                if let allowedValues = core.allowedValues?.compactMap({ $0.value as? String }), !allowedValues.isEmpty {
+                    self = .enum(Set(allowedValues))
+                } else {
+                    self = .string(format: core.formatString.flatMap(StringFormat.init(rawValue:)))
+                }
 
             case .object(_, let objectContext):
                 if let schema = objectContext.additionalProperties?.schemaValue {

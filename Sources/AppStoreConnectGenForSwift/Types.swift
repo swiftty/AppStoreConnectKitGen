@@ -218,7 +218,7 @@ struct EnumRepr: Repr {
 
         let name = "\(renderType(context: context))"
 
-        // do not generate `unknown` for resource type
+        // do not generate `rawValue` for resource type
         if key == "type", cases.count == 1 {
             return EnumDecl(
                 access: .public,
@@ -229,14 +229,26 @@ struct EnumRepr: Repr {
                 }
             )
         } else {
-            return EnumDecl(
+            return StructDecl(
                 access: .public,
                 name: name,
                 inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "RawRepresentable", "Sendable"],
-                cases: caseValues.map { CaseDecl(name: $0.key.rawValue) } + [
-                    CaseDecl(name: "unknown", value: .arguments([
-                        ArgumentDecl(name: "", type: "String")
-                    ]))
+                members: caseValues.map {
+                    MemberDecl(
+                        access: .public,
+                        modifier: .static,
+                        keyword: .var,
+                        name: $0.key.rawValue,
+                        type: "Self",
+                        value: .computed(".init(rawValue: \"\($0.raw)\")")
+                    )
+                } + [
+                    MemberDecl(
+                        access: .public,
+                        keyword: .var,
+                        name: "rawValue",
+                        type: "String"
+                    )
                 ],
                 initializers: [
                     InitializerDecl(
@@ -244,32 +256,10 @@ struct EnumRepr: Repr {
                         arguments: [
                             ArgumentDecl(name: "rawValue", type: "String")
                         ],
-                        body: """
-                    switch rawValue {
-                    \(caseValues.map {
-                        #"case "\#($0.raw)": self = .\#($0.key)"#
-                    }.joined(separator: "\n"))
-                    default: self = .unknown(rawValue)
-                    }
-                    """
+                        body: "self.rawValue = rawValue"
                     )
                 ],
-                members: [
-                    MemberDecl(
-                        access: .public,
-                        keyword: .var,
-                        name: "rawValue",
-                        type: "String",
-                        value: .computed("""
-                    switch self {
-                    \(caseValues.map {
-                        #"case .\#($0.key): return "\#($0.raw)""#
-                    }.joined(separator: "\n"))
-                    case .unknown(let rawValue): return rawValue
-                    }
-                    """)
-                    )
-                ]
+                functions: []
             )
         }
     }
