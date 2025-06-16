@@ -152,7 +152,7 @@ struct EndpointRenderer: Renderer {
             functions: []
         )
 
-        decl.annotations = method.deprecated ?? false ? [.deprecated()] : []
+        decl.annotations = method.deprecated ? [.deprecated()] : []
         decl.members.append(
             MemberDecl(
                 access: .public,
@@ -192,7 +192,7 @@ struct EndpointRenderer: Renderer {
 private struct Doc {
     var type: String?
     var prefix: String?
-    var status: Int
+    var status: String
     var description: String?
 
     func render() -> String? {
@@ -279,15 +279,14 @@ private func buildResponseDecl<T>(into baseDecl: inout StructDecl,
         }
     }
     for (status, response) in method.responses.sorted(by: { $0.key < $1.key }) {
-        let isSuccess = (200..<300).contains(status)
+        let isSuccess = Int(status).map((200..<300).contains) ?? false
         let content: (contentType: String, content: OpenAPIEndpoint.Response.Content)?
 
-        if response.content?.isEmpty ?? false {
-            assertionFailure(String(describing: response.content))
+        if response.content.isEmpty {
             continue
         } else {
-            let found = (response.content?.first(where: { $0.key == "application/json" })
-                         ?? response.content?.first)
+            let found = (response.content.first(where: { $0.key == "application/json" })
+                         ?? response.content.first)
             content = found.map { ($0.key, $0.value) }
         }
 

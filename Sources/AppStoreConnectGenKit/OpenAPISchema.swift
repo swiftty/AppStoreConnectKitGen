@@ -16,6 +16,13 @@ public struct OpenAPISchema: Decodable {
         deprecated = schema.deprecated
     }
 
+    public init(_ schema: JSONReference<JSONSchema>) {
+        title = nil
+        description = nil
+        deprecated = false
+        value = .ref(.init(rawValue: schema.name ?? ""))
+    }
+
     public init(from decoder: any Decoder) throws {
         let schema = try JSONSchema(from: decoder)
         self.init(schema)
