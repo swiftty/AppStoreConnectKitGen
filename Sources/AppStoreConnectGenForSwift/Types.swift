@@ -312,6 +312,7 @@ struct OneOfRepr: Repr {
         )] = []
         var used: Set<TypeName> = []
         for prop in props {
+            guard prop.title != nil else { continue }
             let repr = findRepr(for: prop, with: "")
             let type = repr.renderType(context: context)
             guard used.insert(type).inserted else { continue }

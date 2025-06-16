@@ -1,4 +1,5 @@
 import Foundation
+@preconcurrency import OpenAPIKit30
 
 public typealias OpenAPISchemas = [String: OpenAPISchema]
 
@@ -8,23 +9,16 @@ public struct OpenAPISchema: Decodable {
     public var value: Property
     public var deprecated: Bool
 
-    private enum CodingKeys: String, CodingKey {
-        case title, description, deprecated
+    public init(_ schema: JSONSchema) {
+        title = schema.title
+        description = schema.description
+        value = Property(from: schema.value)
+        deprecated = !schema.required
     }
 
-    public init(title: String? = nil, description: String? = nil, value: Property, deprecated: Bool) {
-        self.title = title
-        self.description = description
-        self.value = value
-        self.deprecated = deprecated
-    }
-
-    public init(from decoder: Decoder) throws {
-        let c = try decoder.container(keyedBy: CodingKeys.self)
-        title = try c.decodeIfPresent(String.self, forKey: .title)
-        description = try c.decodeIfPresent(String.self, forKey: .description)
-        value = try Property(from: decoder)
-        deprecated = try c.decodeIfPresent(Bool.self, forKey: .deprecated) ?? false
+    public init(from decoder: any Decoder) throws {
+        let schema = try JSONSchema(from: decoder)
+        self.init(schema)
     }
 
     public func withDescription(_ description: String?) -> OpenAPISchema {
@@ -35,7 +29,7 @@ public struct OpenAPISchema: Decodable {
 }
 
 extension OpenAPISchema {
-    public indirect enum Property: Decodable {
+    public indirect enum Property {
         case ref(Ref)
         case object(properties: [String: OpenAPISchema], required: Set<String>)
         case array(OpenAPISchema)
@@ -48,7 +42,7 @@ extension OpenAPISchema {
         case oneOf([OpenAPISchema])
         case undefined
 
-        public enum StringFormat: String, Decodable {
+        public enum StringFormat: String {
             case email
             case uri
             case uriReference = "uri-reference"
@@ -59,86 +53,53 @@ extension OpenAPISchema {
             case binary
         }
 
-        private enum _Type: String, Decodable {
-            case object
-            case array
-            case string
-            case integer
-            case number
-            case boolean
-        }
-
-        private enum CodingKeys: String, CodingKey {
-            case type
-            // ref
-            case ref = "$ref"
-            // object
-            case properties
-            case required
-
-            case additionalProperties
-            // array
-            case items
-            // enum
-            case `enum`
-            // string
-            case format
-            // oneOf
-            case oneOf
-        }
-
         // swiftlint:disable:next cyclomatic_complexity
-        public init(from decoder: Decoder) throws {
-            let c = try decoder.container(keyedBy: CodingKeys.self)
-            if let ref = try c.decodeIfPresent(Ref.self, forKey: .ref) {
-                self = .ref(ref)
-                return
-            }
-
-            switch try? c.decode(_Type.self, forKey: .type) {
-            case .object:
-                if let additionalProperties = try c.decodeIfPresent(OpenAPISchema.self, forKey: .additionalProperties) {
-                    self = .anyKey(additionalProperties)
-                    return
-                }
-                do {
-                    let properties = try c.decode([String: OpenAPISchema].self, forKey: .properties)
-                    let required = try c.decodeIfPresent(Set<String>.self, forKey: .required)
-                    self = .object(properties: properties, required: required ?? [])
-                } catch DecodingError.keyNotFound(CodingKeys.properties, _) {
-                    self = .undefined
-                }
-
-            case .array:
-                let value = try c.decode(OpenAPISchema.self, forKey: .items)
-                self = .array(value)
-
-            case .string:
-                if let values = try c.decodeIfPresent(Set<String>.self, forKey: .enum) {
-                    self = .enum(values)
-                } else {
-                    self = .string(format: try c.decodeIfPresent(StringFormat.self, forKey: .format))
-                }
-
-            case .integer:
-                self = .integer
+        public init(from schema: JSONSchema.Schema) {
+            switch schema {
+            case .boolean:
+                self = .boolean
 
             case .number:
                 self = .number
 
-            case .boolean:
-                self = .boolean
+            case .integer:
+                self = .integer
 
-            case nil:
-                let items = try c.decode([OpenAPISchema].self, forKey: .oneOf)
-                self = .oneOf(items)
+            case .string(_, let stringContext):
+                self = .string(format: stringContext.pattern.flatMap(StringFormat.init(rawValue:)))
+
+            case .object(_, let objectContext):
+                if let schema = objectContext.additionalProperties?.schemaValue {
+                    self = .anyKey(OpenAPISchema(schema))
+                } else {
+                    let properties = objectContext.properties.mapValues(OpenAPISchema.init).reduce(into: [:]) { result, next in
+                        result[next.key] = next.value
+                    }
+                    self = .object(properties: properties, required: Set(objectContext.requiredProperties))
+                }
+
+            case .array(_, let arrayContext):
+                let items = arrayContext.items.map(OpenAPISchema.init)
+                self = .array(items!)
+
+            case .one(let oneOf, _):
+                self = .oneOf(oneOf.map(OpenAPISchema.init))
+
+            case .reference(let ref, _):
+                self = .ref(.init(rawValue: ref.name ?? ""))
+
+            case .fragment:
+                self = .undefined
+
+            case .all, .any, .not:
+                fatalError()
             }
         }
     }
 }
 
 extension OpenAPISchema {
-    public struct Ref: RawRepresentable, Decodable {
+    public struct Ref: RawRepresentable {
         public var rawValue: String
         public var key: String { rawValue.components(separatedBy: "/").last! }
 
