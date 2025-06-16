@@ -27,7 +27,8 @@ extension EndpointRenderer {
                     }
                 }
 
-                let prop = root!
+                var prop = root!
+                prop.required = false
                 let repr = findRepr(for: prop.schema, with: name)
                 let type = repr.renderType(context: context)
                 parametersDecl.members.append(MemberDecl(
