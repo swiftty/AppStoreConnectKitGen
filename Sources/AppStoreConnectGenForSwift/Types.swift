@@ -232,7 +232,7 @@ struct EnumRepr: Repr {
             return StructDecl(
                 access: .public,
                 name: name,
-                inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "RawRepresentable", "Sendable"],
+                inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "RawRepresentable", "CustomStringConvertible", "Sendable"],
                 members: caseValues.map {
                     MemberDecl(
                         access: .public,
@@ -243,6 +243,13 @@ struct EnumRepr: Repr {
                         value: .computed(".init(rawValue: \"\($0.raw)\")")
                     )
                 } + [
+                    MemberDecl(
+                        access: .public,
+                        keyword: .var,
+                        name: "description",
+                        type: "String",
+                        value: .computed("rawValue")
+                    ),
                     MemberDecl(
                         access: .public,
                         keyword: .var,
