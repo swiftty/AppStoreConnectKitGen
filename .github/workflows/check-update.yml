@@ -10,13 +10,7 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/cache@v4
-        with:
-          path: |
-            .build
-          key: ${{ runner.os }}-build-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-build-
+      - uses: ./.github/actions/setup
       - name: Generate GitHub Apps token
         id: generate
         uses: tibdex/github-app-token@v2
@@ -71,7 +65,6 @@ jobs:
 
           if git ls-remote --exit-code origin "refs/heads/update-generated-code"; then
             git push origin update-generated-code -f
-            echo "exists=true" >> $GITHUB_OUTPUT
           else
             git push origin update-generated-code
             echo "exists=false" >> $GITHUB_OUTPUT
