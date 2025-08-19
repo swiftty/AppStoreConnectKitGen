@@ -9,7 +9,6 @@ runs:
           .build
         key: ${{ runner.os }}-build-${{ hashFiles('**/Package.resolved') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ hashFiles('**/Package.resolved') }}
           ${{ runner.os }}-build-
     - name: Git settings
       shell: bash
