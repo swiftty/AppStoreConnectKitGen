@@ -12,13 +12,7 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/cache@v4
-        with:
-          path: |
-            .build
-          key: ${{ runner.os }}-build-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-build-
+      - uses: ./.github/actions/setup
       - run: |
           mkdir tmp
           cd tmp
