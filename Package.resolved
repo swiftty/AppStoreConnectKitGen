@@ -1,13 +1,13 @@
 {
-  "originHash" : "2417ddd03aae057a9d446ca2b403f15ac8645aa15b73200a5076a7e2231cf561",
+  "originHash" : "bdf03284b548a7134febda25af20e81f4456f654c7a5b1606093494c559ecdcc",
   "pins" : [
     {
       "identity" : "openapikit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattpolzin/OpenAPIKit",
       "state" : {
-        "revision" : "e0ecdf050c4bebc0104ed2505ec6fa1f6afb7555",
-        "version" : "3.7.0"
+        "revision" : "1b6ab9d9faa9af9a3dcccada41c0e6983b63e5d2",
+        "version" : "4.0.0"
       }
     },
     {
@@ -26,15 +26,6 @@
       "state" : {
         "revision" : "ba9c5098f8c708e74ea0798e30e8b386a79c3ba3",
         "version" : "0.61.0"
-      }
-    },
-    {
-      "identity" : "yams",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/Yams.git",
-      "state" : {
-        "revision" : "db9ff235cf800bc657c3ed0961078fc231d0f28b",
-        "version" : "5.2.0"
       }
     }
   ],
