@@ -33,6 +33,7 @@ jobs:
           curl "https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip" -o app-store-connect-openapi-specification.zip
           unzip app-store-connect-openapi-specification.zip
           mv *.json openapi.oas.json
+          cat openapi.oas.json | jq .info.version
           cd ..
       - run: |
           swift build -c release
@@ -47,12 +48,13 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git checkout -b update-generated-code
-          git add .
 
           if git diff --cached --quiet; then
             echo "No changes"
           else
             echo "Changes detected"
+            
+            git add .
             git commit -m "Update generated code"
 
             echo "changed=true" >> $GITHUB_OUTPUT
