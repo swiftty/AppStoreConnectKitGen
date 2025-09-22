@@ -1,13 +1,13 @@
 {
-  "originHash" : "1405a71ec43bdc3de17098afe2d94583c368312ada0f17c8cd9cb695bd3dd1ea",
+  "originHash" : "29257a37a832f5e8ea0cf68ef3c58f9cf8861551315a04d7c1692959873fa48a",
   "pins" : [
     {
       "identity" : "openapikit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattpolzin/OpenAPIKit",
       "state" : {
-        "revision" : "fe8cd4bd569b0834943cdc230b1204b0a9c6e14e",
-        "version" : "4.1.0"
+        "revision" : "6a4bcdcd4335176c99da68bc2d49ef25ecac8b7c",
+        "version" : "4.2.0"
       }
     },
     {
