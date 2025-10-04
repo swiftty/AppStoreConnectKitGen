@@ -55,11 +55,14 @@ struct IdentifierName: RawRepresentable, Hashable, CustomStringConvertible {
     var description: String { rawValue }
 
     init(rawValue: String) {
-        if !rawValue.contains("-") {
+        if rawValue.contains(/[-\.]/) {
+            // special case for containing `-`, `.`
             self.rawValue = rawValue
+                .replacingOccurrences(of: "-", with: "_")
+                .replacingOccurrences(of: ".", with: "_")
+                .lowercased()
         } else {
-            // special case for containing `-`
-            self.rawValue = rawValue.replacingOccurrences(of: "-", with: "_").lowercased()
+            self.rawValue = rawValue
         }
     }
 
@@ -232,7 +235,9 @@ struct EnumRepr: Repr {
             return StructDecl(
                 access: .public,
                 name: name,
-                inheritances: (context.inherits[name] ?? []) + ["Hashable", "Codable", "RawRepresentable", "CustomStringConvertible", "Sendable"],
+                inheritances: (context.inherits[name] ?? []) + [
+                    "Hashable", "Codable", "RawRepresentable", "CustomStringConvertible", "Sendable"
+                ],
                 members: caseValues.map {
                     MemberDecl(
                         access: .public,
