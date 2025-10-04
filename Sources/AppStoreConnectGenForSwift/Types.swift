@@ -58,8 +58,7 @@ struct IdentifierName: RawRepresentable, Hashable, CustomStringConvertible {
         if rawValue.contains(/[-\.]/) {
             // special case for containing `-`, `.`
             self.rawValue = rawValue
-                .replacingOccurrences(of: "-", with: "_")
-                .replacingOccurrences(of: ".", with: "_")
+                .replacing(/[-\.]/, with: "_")
                 .lowercased()
         } else {
             self.rawValue = rawValue
