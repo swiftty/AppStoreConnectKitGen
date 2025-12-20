@@ -15,7 +15,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/mattpolzin/OpenAPIKit", from: "4.3.1"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.6.2"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.7.0"),
 
         // devDependencies
         .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.62.2"),
