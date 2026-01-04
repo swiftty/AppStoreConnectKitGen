@@ -18,7 +18,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.7.0"),
 
         // devDependencies
-        .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.62.2"),
+        .package(url: "https://github.com/swiftty/SwiftLintBinary.git", from: "0.63.0"),
     ],
     targets: [
         .executableTarget(
