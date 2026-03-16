@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattpolzin/OpenAPIKit",
       "state" : {
-        "revision" : "3781886c6f0624226d9580bf4fb46fcf04aeb99a",
-        "version" : "5.1.1"
+        "revision" : "17d67c2cd226c4cbe0293d0ee4eed443b9886678",
+        "version" : "5.2.0"
       }
     },
     {
