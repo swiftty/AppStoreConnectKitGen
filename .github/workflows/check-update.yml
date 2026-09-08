@@ -13,10 +13,10 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Generate GitHub Apps token
         id: generate
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
       - name: Clone AppStoreConnectKit
         run: |
           git clone https://x-access-token:${{ steps.generate.outputs.token }}@github.com/swiftty/AppStoreConnectKit.git
