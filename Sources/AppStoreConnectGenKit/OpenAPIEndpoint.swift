@@ -92,7 +92,7 @@ extension OpenAPIEndpoint {
 extension OpenAPIEndpoint {
     public struct Parameter {
         public var name: String
-        public var `in`: Location
+        public var `in`: Location  // swiftlint:disable:this identifier_name
         public var description: String?
         public var schema: OpenAPISchema
         public var required: Bool?

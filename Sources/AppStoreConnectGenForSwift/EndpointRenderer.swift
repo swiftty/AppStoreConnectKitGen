@@ -256,9 +256,7 @@ private func buildResponseDecl<T>(into baseDecl: inout StructDecl,
         }
 
         switch contentType {
-        case "application/json",
-            "application/vnd.apple.diagnostic-logs+json",
-            "application/vnd.apple.xcode-metrics+json":
+        case _ where contentType.hasPrefix("application/") && contentType.hasSuffix("json"):
             return """
             \(success ? "return" : "throw") try jsonDecoder.decode(\(type).self, from: data)
             """
