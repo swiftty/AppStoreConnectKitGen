@@ -17,6 +17,9 @@ jobs:
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: swiftty
+          repositories: |
+            AppStoreConnectKit
       - name: Clone AppStoreConnectKit
         run: |
           git clone https://x-access-token:${{ steps.generate.outputs.token }}@github.com/swiftty/AppStoreConnectKit.git
